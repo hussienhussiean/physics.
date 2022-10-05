@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <script src="https://cdn.jsdelivr.net/npm/p5@1.4.1/lib/p5.min.js"></script>
+  
+  <meta charset="utf-8" />
+</head>
+
+<body>
+  <script >
+ let time=0;
+let t=0;
+let stop=0;
+let alltime=0;
+let t1=0;
+let t2=0;
+let pause=0;
+let start=0;
+let R=250;
+let Iup=0;
+let Bup=0;
+let ang=0;
+let B=0.5;
+let i=0.5;
+let M=0.5;
+let r=125;
+let N=0.0;
+let alpha=0.0;
+//***************************************//////////**********************////////////*********************
+function setup() {
+	
+  createCanvas(displayWidth, displayHeight);
+	
+
+	inpB=createInput("0.5");
+     inpB.position(50,50);
+	inpB.size(25);
+	inpB.input(inputB);
+	
+	inpI=createInput("0.5");
+     inpI.position(50,80);
+	inpI.size(25);
+	inpI.input(inputi);
+	
+	inpR=createInput("12.5");
+     inpR.position(50,110);
+	inpR.size(25);
+	inpR.input(inputr);
+	
+	inpM=createInput("0.5");
+     inpM.position(50,140);
+	inpM.size(25);
+	inpM.input(inputM);
+	
+	
+	//*********************************************************************
+	////////////////////////////////////////////////////////////////////////////////////botun
+	
+	 bstart = createButton('start');
+  bstart.position(110-80, 15);
+  bstart.mousePressed(pstart);
+	
+	bstop = createButton('stop');
+  bstop.position(150-80, 15);
+  bstop.mousePressed(pstop);
+	
+	bpause = createButton('pause');
+  bpause.position(210-100, 15);
+  bpause.mousePressed(ppause);
+	
+	
+		bressum = createButton('Ressum');
+  bressum.position(260-100, 15);
+  bressum.mousePressed(pressum);
+	
+	
+	Ichang = createButton('chang i');
+  Ichang.position(220, 15);
+  Ichang.mousePressed(fIup);
+	
+	
+	Bchang = createButton('chang B');
+  Bchang.position(280, 15);
+  Bchang.mousePressed(fBup);
+	
+
+}
+//********************************************///////////******************///////////*******************
+function draw() {
+ //  background(135,206,250);
+
+	NH=windowHeight/720;
+	NW=windowWidth/1280;
+	
+	N=(NH+NW)/2
+	
+	background(135,206,250);
+	
+	R=2*r*N;
+//	 camera(0,0, -10, 0, 0, 0, 0, 1, 0);
+	
+	
+	
+  noStroke();
+  fill(45, 197, 244);
+ 
+	
+	
+	
+	
+	/////////////////////////////////////////////////////////////////////////////////////////قسم الزمن
+	
+	
+	if(start==1)
+		{
+			
+			
+			
+			
+			if(pause==0)
+				{
+				//t=ressum;	
+					
+				time=millis();
+		//	
+					t=(time+ressum-stop)/1000;	
+						
+					
+					
+			}
+			
+			
+			
+		}
+	
+	
+	
+	
+	//**************************************************************************التحريك
+	alpha=1000*(i*B)/(M);
+	ang=alpha*t*t/2;
+	
+	
+	///////////////////////////////////////////////////////////قسم الرسم
+	push();
+	translate(windowWidth/2,windowHeight/2);
+	fill(150);
+	push();
+	if(Iup==Bup)
+		{
+			rotate(-ang);
+		}
+	else{
+		rotate(ang);
+	}
+	circle(0,0,R);
+	
+	
+	
+	for(let i=0;i<2*PI;i+=PI/4)
+		{
+		push();
+			stroke(80);
+			strokeWeight(1);
+		rotate(i);	
+			line(0,0,0,R/2);
+			pop();
+			
+		}
+	pop();
+	stroke(0);
+	push();
+	strokeWeight(12);
+	point(0,0);
+	pop();
+	noFill();
+	rect(-R,0,2*R,R/2);
+	
+		
+	fill('blue');
+	
+	rect(-R/4,R/2,2*R/4,20);
+	fill('black');
+text("b",0,R/2+4,25,25);
+	if(Iup==1)
+		{fill('blue');
+		 	push();
+	translate(0,10);
+			circle(-R/2-1,-R/2-3,20);
+		 
+			stroke(0);
+			line(-R/2-8,-R/2-3,-R/2+6,-R/2-3,20);
+		 pop();
+		 noFill();
+			stroke('blue');
+		
+		 curve(-15,70,0,0,-R/2,-R/2,-50,1050);
+		
+	stroke('red');
+	
+	curve(-15,70,-5,R/2+15,-R/1.5,R/1.5,-50,900)
+		  stroke(0);
+		 fill('red');
+		 circle(-R/1.5,R/1.5+10,20);
+		 line(-R/1.5,R/1.5+10-6,-R/1.5,R/1.5+10+6);
+		 line(-R/1.5-6,R/1.5+10,-R/1.5+6,R/1.5+10);
+		 line(0,0,0,R/2);
+		 strokeWeight(5);
+		
+		line(0,R/2,0,R/2.5);
+		line(0,R/2.5,-5,R/2.5+5);
+		line(0,R/2.5,5,R/2.5+5);
+		strokeWeight(0);
+		textSize(20);
+		fill(0);
+		text("i",-20,R/2.5,25,25);
+		}
+	else{
+		fill('red');
+		push();
+		translate(0,10);
+		circle(-R/2-1,-R/2-3,20);
+		
+			stroke(0);
+			line(-R/2-8,-R/2-3,-R/2+6,-R/2-3,20);
+		line(-R/2-1,-R/2-10,-R/2-1,-R/2+4);
+		pop();
+		noFill();
+			stroke('red');
+		curve(-15,70,0,0,-R/2,-R/2,-50,1050);
+	
+	stroke('blue');
+	curve(-15,70,-5,R/2+15,-R/1.5,R/1.5,-50,900);
+		stroke(0);
+		fill('blue');
+		 circle(-R/1.5,R/1.5+10,20);
+		// line(-R/1.5,R/1.5+10-6,-R/1.5,R/1.5+10+6);
+		 line(-R/1.5-6,R/1.5+10,-R/1.5+6,R/1.5+10);
+		line(0,0,0,R/2);
+		
+		strokeWeight(5);
+		
+		line(0,0,0,R/8);
+		line(0,R/8,-5,R/8-5);
+		line(0,R/8,5,R/8-5);
+		strokeWeight(0);
+		textSize(20);
+		fill(0);
+		text("i",-20,R/5-20,25,25);
+		
+	}
+	textSize(20*N);
+	if(Bup==1)
+		{
+					
+
+	  stroke(0);
+			noFill();
+			strokeWeight(1);
+			text("B",-R+40,10,24,44);
+			circle(-R+20,20,20);
+			strokeWeight(4);
+			point(-R+20,20,20);
+			
+			
+			
+		}
+	else
+		{
+			 stroke(0);
+			strokeWeight(1);
+			noFill();
+			circle(-R+20,20,20);
+			text("B",-R+40,10,24,44);
+			
+			push();
+			translate(-R+20,20);
+			rotate(PI/4);
+		
+			line(-10,0,10,0);
+			line(0,-10,0,10);
+			pop();
+		}
+	
+	strokeWeight(3);
+	if(Iup==Bup)
+		{
+		line(0,R/4,R/6,R/4);
+			line(R/6,R/4,R/6-5,R/4-5);
+			line(R/6,R/4,R/6-5,R/4+5);
+			strokeWeight(1);
+			text("F",R/8,R/7,44,44);
+		}
+	else
+		{
+			line(0,R/4,-R/6,R/4);
+			line(-R/6,R/4,-R/6+5,R/4-5);
+			line(-R/6,R/4,-R/6+5,R/4+5);
+			strokeWeight(1);
+			text("F",-R/8,R/3.5,44,44);
+		}
+	
+	pop();
+	/*noFill();
+	curve(-15,70,0,0,-R/2,-R/2,-50,1050);
+	
+	
+	curve(-15,70,-5,R/2+15,-R/1.5,R/1.5,-50,900);
+	pop();*/
+	
+	
+	//////////*************************************************************معطيات الدخل
+	push();
+	fill('red');
+	stroke(255);
+	strokeWeight(5);
+	text("B =",5,45,55,25);
+	text("i =",5,75,55,25);
+	text("R =",5,105,55,25);
+	text("M =",5,135,55,25);
+	
+	pop();
+	//**********************/****/********************************************************output
+	
+	textSize(15);
+	fill(0);
+	//text("time"+t,5,500,25,25);
+	
+	
+	
+	
+	
+}
+////////////////////////////////////////////////////////////////////////////////botun
+
+function pstart()
+{
+	pause=0;
+	start=1;
+	t=0;
+	ressum=0;
+	stop=millis();
+ 
+	
+}
+
+function pstop()
+{
+	
+start=0;
+pause=0;
+ t=0;
+ressum=0;
+
+}
+
+function pressum()
+{
+	
+	pause=0;
+	ressum=1000*t;
+	stop=millis();
+	
+}
+function ppause()
+{
+	pause=1;
+ressum=t;
+	t=ressum;
+
+}
+
+function fIup()
+{
+	Iup++;
+	Iup=Iup%2;
+}
+function fBup()
+{
+	
+	Bup++;
+	Bup=Bup%2;
+}
+//**********************************************************************
+function inputB()
+{
+	B=1.0*abs(this.value());
+}
+
+function inputi()
+{
+	i=1.0*abs(this.value());
+}
+function inputr()
+{
+	r=10.0*abs(this.value());
+}
+
+function inputM()
+{
+	M=1.0*abs(this.value());
+}
+  </script>
+</body>
+
+</html>

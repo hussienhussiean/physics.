@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <script src="https://cdn.jsdelivr.net/npm/p5@1.4.1/lib/p5.min.js"></script>
+  
+  <meta charset="utf-8" />
+</head>
+
+<body>
+  <script >
+
+
+let bob;
+let O;
+let anchor;
+let velocity;
+let L = 200;
+let K= 10;
+let lastK=10;
+let w0;
+let mass=0.1;
+let force;
+let A;
+let Ymax;
+let Ymax1;
+let Ymax2;
+let time;
+let time1;
+let retime=0;
+let lastTime=0;
+let savetime=0;
+let x=0;
+let x0=0;
+let start=0;
+let pause=0;
+let changx=0;
+let trans=200;
+let lastmass=0.1;
+let v=0.0;
+let a=0.0;
+let transout=0.0;
+let transboot=0;
+let inp;
+let inp1;
+let inp2;
+let En=0;
+let x1=0;
+let E=0;
+let Ep=0;
+let Ek=0;
+function setup() {
+  createCanvas(1200, 550);
+	x0=mass*10/K;
+  bob = createVector(width/2+trans, L+x0);
+	Ymax=createVector(width/2+trans,L+x0);
+	O=createVector(width/2+60+trans,L);
+Ymax1=createVector(width/2+60+trans,2*L-Ymax.y);
+	Ymax2=createVector(width/2+60+trans,Ymax.y);
+
+  anchor = createVector(width/2+trans, 0);
+	
+	 inp = createInput('10');//////////////////////////////////K
+  //inp.position(width/2-170+trans, 10+transboot);
+  inp.size(30);
+  inp.input(inputK);
+	
+inp1 = createInput('0.1');/////////////////////////////////Mass
+ // inp1.position(width/2-170+trans, 40+transboot);
+  inp1.size(30);
+  inp1.input(inputmass);
+	
+	 inp2 = createInput('20');/////////////////////////////////Mass
+ // inp2.position(width/2-170+trans, 70+transboot);
+  inp2.size(30);
+  inp2.input(inputL);
+	
+	
+  velocity = createVector(0, 0);
+  gravity = createVector(0, 0.1);
+}
+
+function draw() {////////////////////////////////////////////////////draw
+	x0=mass*10000/K;
+	resizeCanvas(1200,550+x0+L-200);
+  background(135,206,250);
+	inp.position(width/2-170+trans, 10+transboot);////////////////////////k.position
+	  inp1.position(width/2-170+trans, 40+transboot);/////////////////////mass.position
+    inp2.position(width/2-170+trans, 70+transboot);//////////////////////////L.position
+  strokeWeight(4);
+  stroke(80);
+	
+	O.y=L+x0;
+	if(changx==0)
+		{
+			Ymax.y=L+x0;
+			bob.y=L+x0;
+		}
+	
+	Ymax1.y=2*x0+2*L-Ymax.y;
+	Ymax2.y=Ymax.y;
+	if(start==0&&changx==0)
+		{
+			time1=millis()/1000;
+			
+			savetime=0;
+			lastTime=0;
+		}
+	push();
+	stroke('white');
+	for(let i=width/2-100;i<width/2+100;i+=10)
+		{
+			
+			point(i+trans,L+x0);
+			point(i+trans,Ymax.y);
+			point(i+trans,2*L-Ymax.y+2*x0);
+		}
+	pop();
+ // line(anchor.x, anchor.y, bob.x, bob.y);//
+	let last=0;
+	for(let k=1;k<=bob.y;k+=bob.y/(L/10))
+		{
+		if(last>0)
+			{
+				line(width/2-10+trans,last,width/2+10+trans,k);
+			}
+			line(width/2-10+trans,k,width/2+10+trans,k);
+			last=k;
+		}
+	//line(bob1.x,bob1.y,bob2.x,bob2.y);
+  fill(45, 197, 244);
+	 
+  circle(anchor.x, anchor.y, 32);
+	
+	push();
+	strokeWeight(1);
+	fill(130)
+  square(bob.x-28, bob.y-28, 56);
+	
+	
+	
+	
+	
+			if(pause==1)
+		{
+			if(savetime==0)
+				{
+					lastTime=retime;	
+					savetime=1;
+				}
+			
+			
+time1=millis()/1000;
+			
+		
+		
+		}
+
+  if (mouseIsPressed&&mouseX>width/2-29+trans&&mouseX<width/2+29+trans) {
+   // bob.x = mouseX;
+    bob.y = mouseY;
+	  Ymax.y=mouseY;
+	  fill('red');
+	  text("Xmax= "+round((mouseY-L-x0)/10,1)+"cm",mouseX-20,mouseY-10,100,100);
+	  changx=1;
+	  start=1;
+	  pause=0;
+	  savetime=0;
+	 time1 = millis()/1000;
+   velocity.set(0, 0);
+  }
+	//else
+		//{
+		
+	
+	drawArrow(O, Ymax1, 'white');
+	drawArrow(O, Ymax2, 'black');
+	// time = millis();
+			
+					retime=millis()/1000-time1+lastTime;
+				
+	E=(Ymax.y-L-x0)*(Ymax.y-L-x0)*K/2000000;
+			
+	if(Ymax.y!=250+x0)
+		{
+			w0=sqrt(K/mass);
+		 x=(Ymax.y-L-x0)*cos(w0*retime);
+			v=-1*w0*(Ymax.y-L-x0)*sin(w0*retime)/1000;
+			a=-1*w0*w0*x/1000;
+			bob.y=L+x0+x;
+			Ep=x*x*K/2000000;
+			Ek=mass*v*v/2;
+		}
+			
+			
+						if(mouseIsPressed&&mouseX>width-200&&mouseX<width)
+							{
+								
+								transout=mouseY;
+								//inp.position(width/2-170+trans, 10+transboot);
+							}
+
+			
+			
+			
+			
+			push();
+			 translate(0 , transout);
+			fill(100);
+			
+			rect(width-200,0,200,280);
+			
+			
+			fill('white');
+			
+			
+			
+		textSize(12);	
+	text("mass="+mass+"kg"+"\nK="+K+"N/m"+"\nx0 = "+round(x0/10,3)+"cm"+"\n\nXmax="+round(abs(Ymax.y-L-x0)/10,1)+"cm"+"\nW0="+round(w0,3)+"rad/s"+"\nT0="+round(2*PI/w0,3)+"s"+"\nf="+round(w0/(2*PI),3)+"hz"+"\n\ntime="+round(retime,3)+"s"+"\nx="+round(x/10,1)+"cm"+"\nv = "+round(v,3)+" m/s"+"\na = "+round(a,3)+"m/s^2"+"\n\nEtotal= "+round(E,5)+"J"+"\nEp = "+round(Ep,5)+"J"+"\nEk = "+round(Ek,5)+"J",width-180,10,3000,770);
+			//text("Xmax="+(Ymax.y-250)+"\nW0="+w0+"\nT0="+2*PI/w0+"\nf="+w0/(2*PI)+"\nx="+x,width-100,10,3000,770);
+		
+			
+			
+			
+						
+			
+			
+			
+			
+			pop();
+			
+			if(mouseIsPressed&&mouseX>width/2-280+trans&&mouseX<width/2-260+trans)
+							{
+								
+								transboot=mouseY;
+							}
+
+			fill('white');
+			textSize(18);
+			
+			
+			push();
+			push();
+			strokeWeight(0.5);
+			fill(100);
+			rect(width/2-280+trans,0,20,550+x0+L-200);
+			pop();
+			translate(0,transboot);
+			text("K=",width/2-215+trans,5,200,100);
+			text("Mass=",width/2-245+trans,35,200,100);
+		
+			text("L=",width/2-215+trans,65,200,100);
+			////////////////////////////////////////////////////////////////////////الازرار
+		
+			
+			
+			
+			
+			
+			textSize(12);
+			stroke(150);
+			strokeWeight(0.5);
+			fill('black');
+			rect(width/2-180+trans, 90,40,20);
+			fill('white');
+			text("stop",width/2-180+8+trans, 105);
+			if(mouseIsPressed&&mouseX>width/2-180+trans&&mouseX<width/2-180+trans+40&&mouseY>=90+transboot&&mouseY<=110+transboot)
+				{
+					start=0;
+					changx=0;
+					pause=0;
+				}
+			
+			
+			
+			
+			stroke(150);
+			strokeWeight(0.5);
+			fill('black');
+			rect(width/2-180+trans, 90+25,40,20);
+			fill('white');
+			text("pause",width/2-180+2+trans, 105+25);
+			if(mouseIsPressed&&mouseX>width/2-180+trans&&mouseX<width/2-180+trans+40&&mouseY>=90+25+transboot&&mouseY<=110+25+transboot)
+				{
+				pause=1;
+				}
+			
+			textSize(11);
+			
+			
+			stroke(150);
+			strokeWeight(0.5);
+			fill('black');
+			rect(width/2-180+trans, 90+50,40,20);
+			fill('white');
+			text("Resum",width/2-180+2+trans, 105+50);
+			if(mouseIsPressed&&mouseX>width/2-180+trans&&mouseX<width/2-180+trans+40&&mouseY>=90+50+transboot&&mouseY<=110+50+transboot)
+				{
+				pause=0;
+					savetime=0;
+					
+				}
+	
+	
+	
+	stroke(150);
+			strokeWeight(0.5);
+			fill('black');
+			rect(width/2-180+trans, 90+75,40,20);
+			fill('white');
+			text("Energy",width/2-180+2+trans, 105+75);
+			if(mouseIsPressed&&mouseX>width/2-180+trans&&mouseX<width/2-180+trans+40&&mouseY>=90+75+transboot&&mouseY<=110+75+transboot)
+				{
+				En=1;
+					
+				}
+	
+	
+	stroke(150);
+			strokeWeight(0.5);
+			fill('black');
+			rect(width/2-180+trans, 90+100,40,20);
+			fill('white');
+			text("X.V.a",width/2-180+2+trans, 105+100);
+			if(mouseIsPressed&&mouseX>width/2-180+trans&&mouseX<width/2-180+trans+40&&mouseY>=90+100+transboot&&mouseY<=110+100+transboot)
+				{
+				En=0;
+					
+				}
+	
+	
+	
+	
+			
+			
+			pop();
+			
+			
+		//}
+	////////////////////////////////////////////////////////////////////////////////التمثيل البياني 
+	
+	
+	if(En==1)
+		{
+		///////////////////////////////////////////////////////////////////////////////////////////	مخطط الطاقة
+			
+			push();	
+	translate(20,transboot);
+	fill('white');
+rect(0,0,500,300)
+		stroke(0);
+	fill('white');
+	text("Ep(x)",450,10,100,100);
+		strokeWeight(0.5);
+for(let i=0;i<500;i+=10)
+	{
+	if(i<300)
+		{
+		line(0,i,10,i);	
+		}
+		line(i,300,i,290);
+	}
+	line(250,0,250,300);
+	//line(250,0,250,200);
+	strokeWeight(4);
+	//point(250,100);
+	
+	for(let t=0;t<round(PI/w0,3);t+=0.001)
+		{
+			if((Ymax.y-L-x0)*(Ymax.y-L-x0)*K/2<=22*22/2)
+				{
+					x1=(Ymax.y-L-x0)*cos(w0*t);
+			point(90+t*100*w0,-K*x1*x1/2+300);
+					
+				}
+			else
+				{
+					
+			x1=(22)*cos(w0*t);
+			point(90+t*100*w0,-x1*x1/2+300);
+				}
+			
+			
+			
+		
+		}
+		
+			stroke('red');
+			
+			
+			if((Ymax.y-L-x0)*(Ymax.y-L-x0)*K/2<=22*22/2)
+				{
+					text("Etotal",10,-(Ymax.y-L-x0)*(Ymax.y-L-x0)*K/2+300,100,100);
+					line(0,-(Ymax.y-L-x0)*(Ymax.y-L-x0)*K/2+300,500,-(Ymax.y-L-x0)*(Ymax.y-L-x0)*K/2+300);
+					
+					strokeWeight(12);
+					stroke(160);
+					x1=(Ymax.y-L-x0)*cos(w0*retime);
+					point(90+retime%(PI/w0)*100*w0,-x1*x1*K/2+300)
+				}
+			else
+				{
+										text("Etotal",10,-22*22/2+300,100,100);
+					
+					strokeWeight(12);
+					stroke(160);
+					x1=(22)*cos(w0*retime);
+					point(90+retime%(PI/w0)*100*w0,-x1*x1/2+300);
+              stroke('red');
+					strokeWeight(4);
+					
+			line(0,-22*22/2+300,500,-22*22/2+300);
+				}
+			
+	pop();
+			
+			
+			
+			
+			
+		}
+	
+	else
+		{
+			
+		
+
+	
+	
+	push();////////////////////////////////////////////////////////////////xتمثيل
+	
+	translate(20,transboot)
+	fill('white');
+rect(0,0,500,200)
+		stroke(0);
+	fill('white');
+	text("X(t)",450,10,100,100);
+		strokeWeight(0.5);
+for(let i=0;i<500;i+=10)
+	{
+	if(i<200)
+		{
+		line(0,i,10,i);	
+		}
+		line(i,200,i,190);
+	}
+	line(0,100,500,100);
+	//line(250,0,250,200);
+	strokeWeight(4);
+	//point(250,100);
+	
+	for(let t=0;t<round(2*2*PI/w0,3);t+=0.001)
+		{
+			
+			if(abs((Ymax.y-L-x0))<80&&t<5)
+				{
+					point(t*100,-((Ymax.y-L-x0)*cos(w0*t))+100);	
+				}
+			else
+			{
+				if((Ymax.y-L-x0)>0&&t<5)
+					{
+						point(t*100,-(80*cos(w0*t))+100);
+					}
+				else
+					{
+					if(t<5)
+					{
+					
+						point(t*100,(80*cos(w0*t))+100);
+					} 
+					}
+			}
+			
+		
+		}
+	pop();
+	
+	////////////////////////////////////////////////////////////////////////////////v تمثيل
+	
+	push();
+	translate(20,210+transboot);
+	fill('white');
+rect(0,0,500,200)
+		stroke(0);
+	fill('white');
+	text("V(t)",450,10,100,100);
+		strokeWeight(0.5);
+for(let i=0;i<500;i+=10)
+	{
+	if(i<200)
+		{
+		line(0,i,10,i);	
+		}
+		line(i,200,i,190);
+	}
+	line(0,100,500,100);
+	//line(250,0,250,200);
+	strokeWeight(4);
+	//point(250,100);
+	
+	for(let t=0;t<round(2*2*PI/w0,3);t+=0.001)
+		{
+			
+			if(abs(w0*(Ymax.y-L-x0))<80&&t<5)
+				{
+					point(t*100,w0*((Ymax.y-L-x0)*sin(w0*t))+100);	
+				}
+			else
+			{
+				if((Ymax.y-L-x0)>0&&t<5)
+					{
+						point(t*100,(80*sin(w0*t))+100);
+					}
+				else
+					{
+					if(t<5)
+					{
+						point(t*100,-(80*sin(w0*t))+100);
+					}
+					}
+			}
+			
+		
+		}
+	pop();
+	
+	
+	//////////////////////////////////////////////////////////////////////////////////a تمثيل
+	
+	push();
+	translate(20,420+transboot)
+	fill('white');
+rect(0,0,500,200)
+		stroke(0);
+	text("a(t)",450,10,100,100);
+		strokeWeight(0.5);
+for(let i=0;i<500;i+=10)
+	{
+	if(i<200)
+		{
+		line(0,i,10,i);	
+		}
+		line(i,200,i,190);
+	}
+	line(0,100,500,100);
+	//line(250,0,250,200);
+	strokeWeight(4);
+	//point(250,100);
+	
+	for(let t=0;t<round(2*2*PI/w0,3);t+=0.001)
+		{
+			
+			if(abs(w0*w0*(Ymax.y-L-x0))<80&&t<5)
+				{
+					point(t*100,w0*w0*((Ymax.y-L-x0)*cos(w0*t))+100);	
+				}
+			else
+			{
+				if((Ymax.y-L-x0)>0&&t<5)
+					{
+						point(t*100,(80*cos(w0*t))+100);
+					}
+				else
+					{
+					if(t<5)
+					{
+						point(t*100,-(80*cos(w0*t))+100);
+					}
+					}
+			}
+			
+		
+		}
+	pop();
+	
+	
+	
+	
+		}
+	
+	
+}
+
+
+
+/////////////////////////////////////////////////////////////////////////////توابع
+
+
+function drawArrow(base, vec, myColor) {
+  push();
+  stroke(myColor);
+  strokeWeight(3);
+  fill(myColor);
+ 
+  line(base.x, base.y, vec.x, vec.y);
+	if(vec.y>base.y)
+		{
+		line(vec.x,vec.y,vec.x-5,vec.y-5);
+			line(vec.x,vec.y,vec.x+5,vec.y-5);
+		}
+	else{line(vec.x,vec.y,vec.x-5,vec.y+5);
+			line(vec.x,vec.y,vec.x+5,vec.y+5);
+		
+	}
+ 
+}
+
+
+function myInputEvent() {
+  console.log('you are typing: ', this.value());
+}
+
+function inputK()
+{lastK=K;
+	K=this.value();
+ if(K==0)
+	 {
+		 K=lastK;
+	 }
+ x0=mass*10000/K;
+	if(K==0||x0>=2*L)
+		{
+			
+		K=lastK;
+			
+		}
+}
+function inputmass()
+{
+	lastmass=mass;
+	mass=this.value();
+
+	x0=mass*10000/K;
+	if(x0>2*L||mass==0)
+		{
+			mass=lastmass;
+		}
+}
+function inputL()
+{
+
+L=10*this.value();
+	if(L<100)
+		L=100;
+}
+
+  </script>
+</body>
+
+</html>

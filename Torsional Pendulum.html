@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <script src="https://cdn.jsdelivr.net/npm/p5@1.4.1/lib/p5.min.js"></script>
+  
+  <meta charset="utf-8" />
+</head>
+
+<body>
+  <script >
+
+
+//let A;
+let d=20;
+let K=0.016;
+let D;
+let L=200;
+let O;
+let C;
+let c=-20;
+let M1=0;
+let M2=0;
+let M=1;
+let c1;
+let c2;
+let r1=200;
+let r2=0;
+let angmax=0;
+let angl=0;
+let start=0;// بدأ الحركة او التجربة   
+let puse=0;// ايقاف مؤقت
+let last;
+let changd=0;
+let changr1=0;
+let changr2=0;
+let timPause=0;//لحظة التوقف
+let catpuse=0;//تسجيل التوقف
+let time;
+let def=0.0;
+let alpha=0.0;
+let W=0.0;
+let nt=0.0;
+let Ia=0.0;
+let Is=0.0;
+let T0=0.0;
+let w0=0.0001;
+let Ta0=0.0;
+let g=10.0;
+let t1=0;
+let deg=1.0;
+let wa0=0.0;
+let r=10;
+let x1=0;
+let angd=0;
+let En=1;
+let lastK;
+let lastM;
+let lastM1;
+let mul=10;
+let E=0;
+let Ep=0;
+let Ek=0;
+function setup() {
+  createCanvas(1300, 700);
+
+	let inp=createInput('20');
+	 inp.position(width/2-170, 10);        //////// L
+  inp.size(30);
+  inp.input(inputL);
+	
+	
+	let inpd=createInput('0.016');
+	 inpd.position(width/2-170, 40);      ///////// K
+  inpd.size(30);
+  inpd.input(inputK);
+	
+	let inpM=createInput('1');
+	 inpM.position(width/2-170, 70);       ////// M
+  inpM.size(30);
+  inpM.input(inputM);
+	
+	
+	
+	
+	
+	let inpM1=createInput('0');
+	 inpM1.position(width/2-170, 100);       ////// M1
+  inpM1.size(30);
+  inpM1.input(inputM1);
+
+	let inpM2=createInput('1');
+	 inpM2.position(width/2-170, 130);        //////// r
+  inpM2.size(30);
+  inpM2.input(inputr);
+	
+	
+	
+	let inpr1=createInput('0');
+	 inpr1.position(width/2-170, 160);        //////// anglmax
+  inpr1.size(30);
+  inpr1.input(inputanglmax);
+	
+	/*
+	let inpr2=createInput('');
+	 inpr2.position(width/2-150, 190);        //////// r2
+  inpr2.size(30);
+  inpr2.input(inputr2);
+	
+	
+	
+	
+	
+	let inpangmax=createInput('');
+	 inpangmax.position(width/2-150, 220);        //////// angMax
+  inpangmax.size(30);
+  inpangmax.input(inputangmax);*/
+ 
+}
+//////////////////////                                     /////////////////////////////////////draw
+
+function draw() {
+	
+	if(L>300)
+{
+	resizeCanvas(1300, 700+(L-600));
+}
+	
+  //background(112, 50, 126);
+	 background(135,206,250);
+  strokeWeight(4);
+  stroke(255);
+	
+	
+	
+	
+	D=createVector(0,0);
+	
+
+	
+	
+	if(start==0)
+		{
+			angl=angmax;
+			last=millis()/1000;
+		
+			W=0;
+			timPause=0;
+			puse=0.0;
+			alpha=0;
+			T0=0;
+			w0=0;
+		
+			
+			
+			
+		}
+	
+	if(puse==1)
+	{
+		timPause=time;
+		last=millis()/1000;
+	}
+		
+	t1=millis()/1000;
+	
+	time=timPause+t1-last;
+	
+	
+		//c=(M*(L/2-d)+M1*(r1-d)+M2*(r2-d))/(M+M1+M2);
+
+	Ia=M*L*L/12000000+2*M1*r*r/1000000;/////////////////////////////////////////////العطالة
+		
+		E=angmax*angmax*K/2;
+		if(Ia>0&&K>0)
+			{
+				
+				w0=sqrt(K/Ia);
+				T0=2*PI/w0;
+			}
+	if(start==1)
+		{
+			/////القوانين الحركية.............................................................................
+		
+		angl=angmax*cos(w0*time);
+			W=-w0*angmax*sin(w0*time);
+			alpha=-w0*w0*angl;
+			Ek=Ia*W*W/2;
+			Ep=angl*angl*K/2;
+		}
+	
+	
+	
+  //fill(45, 197, 244);
+	//fill(122,139,139);
+	fill(205,133,63);
+	///////////////////////////////////////////////////////////////////////////////////////////قسم الرسم
+	
+ push();
+	
+	translate(width/2+160,height/2-(height/2-L/2)/2);
+	strokeWeight(0.5);
+	//stroke(205,133,63);
+	stroke('black');
+	
+	rotate(angl);
+	
+	
+	rect(-10,-L/2,20,L);
+
+	mass1();
+
+	strokeWeight(10);
+	
+	
+	stroke(135,206,250);
+
+	
+	
+	stroke('white');
+	point(D);
+	
+	for(let j=0;j<55;j+=5)
+		{
+			strokeWeight(2);
+		point(0,j);
+	
+			
+		}
+
+	pop();
+	push();
+	
+	translate(width/2+160,height/2-(height/2-L/2)/2);
+	
+		let an1=0;
+	for(let an=0;an<2*PI-10*PI/180;an+=10*PI/180)
+		{
+			push();
+			stroke('black');
+			strokeWeight(0.5);
+			rotate(an);
+			line(0,50,0,55);
+			strokeWeight(3)
+			stroke(250);
+			fill('black');
+			textSize(6);
+			if(an1<=180)
+				{
+					text(-an1,-3,60,125,22);
+				}
+			else{
+				text(180-an1%180,-4,60,125,22);
+			}
+			
+			an1+=10;
+			pop();
+		}
+	for(let i=0;i<55;i+=5)
+		{
+			//text("vvv"+i,width-50,60,125,22);
+			strokeWeight(2);
+		point(0,i);
+	
+			
+		}
+	
+	pop();
+	
+	textSize(12);
+	////////////////////////////////////////////////////////////////معطيات الدخل
+	fill('red');
+	
+			
+	text("L =",width/2-200,5,125,22)
+	
+	text("K =",width/2-200,40,125,22);
+	//text("vvv",width-50,60,125,22);
+	text("M =",width/2-200,70,125,22);
+	text("M =",width/2-200,100,125,22);
+	text("r =",width/2-200,130,125,22);
+	text("anglMax =",width/2-240,160,125,22);
+	//text("r2 =",width/2-200,190,125,22);
+	//	text("anglMax =",width/2-220,220,125,22);
+fill('black');
+	
+	text("cm",width/2-135,7,125,22);
+	push();
+	textSize(10);
+	text("m*N/rad",width/2-135,37,125,22);
+	pop();
+	text("Kg",width/2-135,67,125,22);
+	text("Kg",width/2-135,97,125,22);
+	text("cm",width/2-135,127,125,22);
+	//text("cm",width/2-115,157,125,22);
+//	text("cm",width/2-115,187,125,22);
+	if(deg==1)
+		{
+			text("deg",width/2-135,157,125,22);
+		}
+	else
+		{
+			text("Rad",width/2-135,157,125,22);
+		}
+	
+	//////////////////////////////////////////////////////////////////////////////معطيات الخرج
+		
+	/*	text(mouseX+"  "+mouseY,width-50,20,222,111);
+	text("L= "+L,width-50,40,222,111);
+	text(start,width-50,60,222,111);
+	text(puse,width-50,80,222,111);
+	text("time="+time,width-50,100,222,111);
+	text(c,width-50,120,222,111);
+	text("M ="+M,width-50,140,222,111);
+	text("M1="+M1,width-50,160,222,111);
+	text("M2="+M2,width-50,180,222,111);
+	text("r1-d="+(r1-d),width-50,200,222,111);
+	text("r2-d="+(r2-d),width-50,220,222,111);
+	text("T0="+T0,width-50,240,222,111);
+	text("Ta0="+Ta0,width-50,260,222,111);
+	
+	//text("c",width-30,40,155,25);*/
+	fill(100);
+	rect(width-250,0,250,240);
+	fill('red');
+	
+	if(deg==1)
+		{
+			text("deg",width-220,10,222,111);
+		}
+	else
+		{
+			text("rad",width-220,10,222,111);
+		}
+	
+	
+	text("time = "+round(time,3),width-220,40,222,111);
+	if(deg==1)
+		{
+		text("angle = "+round(-angl*180/PI,3),width-220,60,222,111);	
+		}
+	else
+		{
+			text("angle = "+round(-angl,3),width-220,60,222,111);
+		}
+	
+	//text("[OC] = "+round(abs(c)/10,1)+" cm",width-220,80,222,111);
+	
+		text("ang_acceleration ="+round(-alpha,3)+" rad/s^2",width-220,80,2220,20);
+			text("ang_velocity ="+round(-W,3)+"rad/s",width-220,100,2220,20);
+	textSize(14);
+	fill('black')
+	
+	//line(width-250,139,width,139);
+	
+//	text("for anglmax <= 14 deg",width-190,145,222,20);
+	textSize(12);
+	fill('red');
+text("T0 ="+round(T0,3)+" s",width-220,120,222,111);
+	text("w0 ="+round(w0,3)+"rad/s"+"\n\nEtotal ="+round(E*1000,3)+"mJ"+"\nEp = "+round(Ep*1000,3)+"mJ"+"\nEk = "+round(Ek*1000,3)+"mJ",width-220,140,222,111);
+	
+	
+	
+	
+	//////////////////////////////////                   //////////////////////////////////////   الازرار
+	
+	
+	fill('black');
+	rect(width/2-90, 5,50,20);
+	text("start",width/2-81,10,125,22);
+	rect(width/2-90, 35,50,20);
+	text("stop",width/2-81,40,125,22);
+	
+	rect(width/2-90, 65,50,20);
+	text("pause",width/2-81,70,125,22);
+	
+	rect(width/2-90, 95,50,20);
+	text("Resum",width/2-85,100,125,22);
+	rect(width/2-90, 125,30,20);
+	text("deg",width/2-85,130,125,22);
+	
+	
+	
+	rect(width/2-50, 125,30,20);
+	text("rad",width/2-45,130,125,22);
+	
+	
+	
+	
+	
+	push();
+	textSize(10);
+	
+	rect(width/2-90, 155,30,20);
+	text("ang.t",width/2-85,160,125,22);
+	
+	pop();
+	
+	rect(width/2-50, 155,30,20);
+	text("Ep.t",width/2-45,160,125,22);
+	///////////              ////////////////////////////////////////////////// ضعط الازرار
+	
+	 if(mouseIsPressed&&mouseY>=5&&mouseY<=25&&mouseX>=width/2-90&&mouseX<=width/2-40)
+		 {
+			start=1; 
+			 
+		 }
+	
+	
+	
+	 if(mouseIsPressed&&mouseY>=35&&mouseY<=55&&mouseX>=width/2-90&&mouseX<=width/2-40)
+		 {
+			start=0; 
+			 
+		 }
+	
+	 if(mouseIsPressed&&mouseY>=65&&mouseY<=85&&mouseX>=width/2-90&&mouseX<=width/2-40)
+		 {
+			puse=1; 
+			 
+		 }
+	
+	 if(mouseIsPressed&&mouseY>=95&&mouseY<=115&&mouseX>=width/2-90&&mouseX<=width/2-40)
+		 {
+			puse=0; 
+			 
+		 }
+	
+	 if(mouseIsPressed&&mouseY>=125&&mouseY<=145&&mouseX>=width/2-90&&mouseX<=width/2-60)
+		 {
+			deg=1; 
+			 
+		 }
+	
+	 if(mouseIsPressed&&mouseY>=125&&mouseY<=145&&mouseX>=width/2-50&&mouseX<=width/2-20)
+		 {
+			deg=0; 
+			 
+		 }
+	
+	
+	
+	
+	
+	
+	if(mouseIsPressed&&mouseY>=155&&mouseY<=175&&mouseX>=width/2-90&&mouseX<=width/2-60)
+		 {
+			En=0; 
+			 
+		 }
+	
+	 if(mouseIsPressed&&mouseY>=155&&mouseY<=175&&mouseX>=width/2-50&&mouseX<=width/2-20)
+		 {
+			En=1; 
+			 
+		 }
+	
+	
+	
+	
+	
+	////////////////////////////////////////////////////////////////////////////////////التمثيل البياني
+	
+	
+	
+	
+	
+	if(w0==0)
+		{
+			
+			w0=1;
+		}
+	
+		
+angd=5*angmax*180/PI;
+	
+/*	
+   if(En==1)
+	   {
+		 fill('white')  ;
+		   rect(0,0,400,300);
+		   
+		   
+		   
+	   }*/
+	
+	
+	
+	if(En==1)
+		{
+		///////////////////////////////////////////////////////////////////////////////////////////	مخطط الطاقة
+			
+	
+	fill('white');
+rect(0,0,400,300);
+		stroke(0);
+	fill('white');
+	text("Ep(angl)",350,10,100,100);
+		strokeWeight(0.5);
+for(let i=0;i<400;i+=10)
+	{
+	if(i<300)
+		{
+		line(0,i,10,i);	
+		}
+		line(i,300,i,290);
+	}
+	line(200,0,200,300);
+	//line(250,0,250,200);
+	strokeWeight(4);
+	//point(250,100);
+			
+	
+	for(let t=0;t<round(PI/w0,3);t+=0.001)
+		{
+			
+			if(K*angd*angd/2<=22*22/2)
+				{
+					x1=angd*cos(w0*t);
+			point(40+t*100*w0,-K*x1*x1/2+300);
+					
+				}
+			else
+				{
+					
+			x1=22*cos(w0*t);
+			point(40+t*100*w0,-x1*x1/2+300);
+				}
+			
+						
+		
+		}
+		
+			stroke('red');
+		
+			
+			if(K*angd*angd/2<=22*22/2)
+				{
+					text("Etotal",10,-angd*angd*K/2+300,100,100);
+					line(0,-angd*angd*K/2+300,400,-angd*angd*K/2+300);
+					
+					strokeWeight(12);
+					stroke(160);
+					x1=angd*cos(w0*time);
+					point(40+time%(PI/w0)*100*w0,-x1*x1*K/2+300);
+				}
+			else
+				{
+										text("Etotal",10,-22*22/2+300,100,100);
+					
+					strokeWeight(12);
+					stroke(160);
+					x1=22*cos(w0*time);
+					point(40+time%(PI/w0)*100*w0,-x1*x1/2+300);
+              stroke('red');
+					strokeWeight(4);
+					
+			line(0,-22*22/2+300,400,-22*22/2+300);
+				}
+			
+
+			
+			
+			
+			
+			
+		}
+		
+	
+	else
+		{
+			
+		angd=angd/5;
+
+	
+	
+	push();////////////////////////////////////////////////////////////////xتمثيل
+	
+	translate(0,0)
+	fill('white');
+rect(0,0,400,200)
+		stroke(0);
+	fill('white');
+	text("angl(t)",350,10,100,100);
+		strokeWeight(0.5);
+for(let i=0;i<400;i+=10)
+	{
+	if(i<200)
+		{
+		line(0,i,10,i);	
+		}
+		line(i,200,i,190);
+	}
+	line(0,100,400,100);
+	//line(250,0,250,200);
+	strokeWeight(4);
+	//point(250,100);
+	
+	for(let t=0;t<round(2*2*PI/w0,3);t+=0.001)
+		{
+			
+			if(abs(angd)<80&&t<20)
+				{
+					point(t*20,-(angd*cos(w0*t))+100);	
+				}
+			else
+			{
+				if(-angd>0&&t<20)
+					{
+						point(t*20,-(80*cos(w0*t))+100);
+					}
+				else
+					{
+						if(t<20)
+							{
+								point(t*20,(80*cos(w0*t))+100);
+							}
+						
+					}
+			}
+			
+		
+		}
+	pop();
+	
+	////////////////////////////////////////////////////////////////////////////////v تمثيل
+	
+	push();
+	translate(0,210);
+	fill('white');
+rect(0,0,400,200)
+		stroke(0);
+	fill('white');
+	text("W(t)",350,10,100,100);
+		strokeWeight(0.5);
+for(let i=0;i<400;i+=10)
+	{
+	if(i<200)
+		{
+		line(0,i,10,i);	
+		}
+		line(i,200,i,190);
+	}
+	line(0,100,400,100);
+	//line(250,0,250,200);
+	strokeWeight(4);
+	//point(250,100);
+	
+	for(let t=0;t<round(2*2*PI/w0,3);t+=0.001)
+		{
+			
+			if(abs(w0*angd)<80&&t<20)
+				{
+					point(t*20,w0*(angd*sin(w0*t))+100);	
+				}
+			else
+			{
+				if(-angd>0&&t<20)
+					{
+						point(t*20,(80*sin(w0*t))+100);
+					}
+				else
+					{
+						if(t<20)
+							{point(t*20,-(80*sin(w0*t))+100);
+								
+							}
+						
+					}
+			}
+			
+		
+		}
+	pop();
+	
+	
+	//////////////////////////////////////////////////////////////////////////////////a تمثيل
+	
+	push();
+	translate(0,420)
+	fill('white');
+rect(0,0,400,200)
+		stroke(0);
+	text("alpha(t)",350,10,100,100);
+		strokeWeight(0.5);
+for(let i=0;i<400;i+=10)
+	{
+	if(i<200)
+		{
+		line(0,i,10,i);	
+		}
+		line(i,200,i,190);
+	}
+	line(0,100,400,100);
+	//line(250,0,250,200);
+	strokeWeight(4);
+	//point(250,100);
+	
+	for(let t=0;t<round(2*2*PI/w0,3);t+=0.001)
+		{
+			
+			if(abs(w0*w0*angd)<80&&t<20)
+				{
+					point(t*20,w0*w0*(angd*cos(w0*t))+100);	
+				}
+			else
+			{
+				if(-angd>0&&t<20)
+					{
+						point(t*20,(80*cos(w0*t))+100);
+					}
+				else
+					{
+						if(t<20)
+						   {
+						   						point(t*20,-(80*cos(w0*t))+100);
+
+						   }
+					}
+			}
+			
+		
+		}
+	pop();
+	
+	
+	
+	
+		}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	//...................................................................
+	
+}
+
+function drawArrow(base, vec, myColor) {
+  push();
+  stroke(myColor);
+  strokeWeight(3);
+  fill(myColor);
+ 
+  line(base.x, base.y, vec.x, vec.y);
+	if(vec.y>base.y)
+		{
+		line(vec.x,vec.y,vec.x-5,vec.y-5);
+			line(vec.x,vec.y,vec.x+5,vec.y-5);
+		}
+	else{line(vec.x,vec.y,vec.x-5,vec.y+5);
+			line(vec.x,vec.y,vec.x+5,vec.y+5);
+		
+	}
+ 
+}
+function inputL()
+{
+	L=10.0*this.value();
+}
+function mass1()
+{
+	
+	if(M1>0&&L>20&&r>0)
+		{
+			/*
+			fill('black');
+			rect(-12,r1-10-d,24,20);
+			fill("black")
+			textSize(7)
+				text("M 1",-7,r1-1-d,30,20);
+				*/
+			stroke(0);
+			strokeWeight(0.5);
+		
+
+		 	
+			fill(100);
+			rect(-12,-r-10,24,20);
+			stroke(250);
+			fill('black');
+			textSize(9);
+			strokeWeight(3);
+				text("M",-7,-r-1,30,20);
+			
+			
+			
+			
+			
+			stroke(0);
+			strokeWeight(0.5);
+		
+
+		 	
+			fill(100);
+			rect(-12,r-10,24,20);
+			stroke(250);
+			fill('black');
+			textSize(9);
+			strokeWeight(3);
+				text("M",-7,r-1,30,20);
+			
+			
+			
+		
+			
+			
+		}
+}
+
+
+
+//////////////////////////////////////////////////////////////توابع الادخال
+function inputL()
+{
+L=10*this.value();
+
+}
+function inputK()
+{lastK=K;
+	K=1.0*this.value();
+ 
+ if(K==0)
+	 {
+		 k=lastK;
+	 }
+}
+function inputM()
+{
+	lastM=M;
+	
+	M=1.0*this.value();
+	if(M==0&&M1==0)
+		{
+			M=lastM;
+		}
+}
+function inputM1()
+{
+	lastM1=M1;
+	M1=1.0*this.value();
+	
+	if(M1==0&&M==0)
+		{
+			M1=lastM1;
+		}
+}
+function inputr()
+{
+	r=10*this.value()%(L/2+1);
+}
+function inputanglmax()
+{
+	if(deg==1)
+		{
+			angmax=-1*this.value()*PI/180;
+		}
+	else
+		{
+			angmax=-1.0*this.value();
+		}
+}
+  
+  
+  
+  
+  </script>
+</body>
+
+</html>

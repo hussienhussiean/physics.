@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <script src="https://cdn.jsdelivr.net/npm/p5@1.4.1/lib/p5.min.js"></script>
+  
+  <meta charset="utf-8" />
+</head>
+
+<body>
+  <script ">
+  
+let time=0;
+let t=0;
+let stop=0;
+let alltime=0;
+let t1=0;
+let t2=0;
+let pause=0;
+let start=0;
+let R=250;
+let Iup=1;
+let Bup=0;
+let ang=0;
+let B=0.0;
+let ii=0.0;
+let M=0.5;
+let r=125;
+let N=0.0;
+let alpha=0.0;
+let L=200;
+let ang1=0;
+let vect=0;
+let rad=0;
+let L1=200;
+//***************************************//////////**********************////////////*********************
+function setup() {
+	
+  createCanvas(displayWidth, displayHeight);
+	
+
+	inpB=createInput("0");
+     inpB.position(50,50);
+	inpB.size(25);
+	inpB.input(inputB);
+	
+	inpI=createInput("0");
+     inpI.position(50,80);
+	inpI.size(25);
+	inpI.input(inputi);
+	
+	inpL=createInput("20");
+     inpL.position(50,110);
+	inpL.size(25);
+	inpL.input(inputL);
+	
+	inpM=createInput("0.5");
+     inpM.position(50,140);
+	inpM.size(25);
+	inpM.input(inputM);
+	
+	
+	//*********************************************************************
+	////////////////////////////////////////////////////////////////////////////////////botun
+	
+	 bstart = createButton('start');
+  bstart.position(110-80, 15);
+  bstart.mousePressed(pstart);
+	
+	bstop = createButton('reset');
+  bstop.position(152-80, 15);
+  bstop.mousePressed(pstop);
+	
+	bpause = createButton('vector');
+  bpause.position(210-92, 15);
+  bpause.mousePressed(vec);
+	
+	
+		bressum = createButton('No_vec');
+  bressum.position(260-90, 15);
+  bressum.mousePressed(unvec);
+	
+	
+	Ichang = createButton('chang i');
+  Ichang.position(230, 15);
+  Ichang.mousePressed(fIup);
+	
+	
+	Bchang = createButton('chang B');
+  Bchang.position(290, 15);
+  Bchang.mousePressed(fBup);
+	
+	
+	Bang = createButton('deg/rad');
+  Bang.position(355, 15);
+  Bang.mousePressed(fang);
+	
+
+}
+//********************************************///////////******************///////////*******************
+function draw() {
+ //  background(135,206,250);
+
+	NH=windowHeight/720;
+	NW=windowWidth/1280;
+	
+	N=(NH+NW)/2
+	
+	background(150,250,250);
+	
+	//R=2*r*N;
+//	 camera(0,0, -10, 0, 0, 0, 0, 1, 0);
+	
+	
+	
+  noStroke();
+  fill(45, 197, 244);
+ 
+	
+	
+	L=L1*N;
+	
+	/////////////////////////////////////////////////////////////////////////////////////////قسم الزمن
+	/*
+	
+	if(start==1)
+		{
+			
+			
+			
+			
+			if(pause==0)
+				{
+				//t=ressum;	
+					
+				time=millis();
+		//	
+					t=(time+ressum-stop)/1000;	
+						
+					
+					
+			}
+			
+			
+			
+		}
+	
+	*/
+	
+	
+	//**************************************************************************التحريك
+//ang=millis()/1000;
+	//Fl*L/2-M*10*L/2*sin(ang)=0
+	//sin(ang)=fl/(M*10)
+	
+	if(ii*L*B/(M*10000)>1)
+	{ang1=PI/2;
+	
+	}
+	else
+	{
+	ang1=abs(asin(ii*L*B/(M*10000)));
+	}
+	
+	if(start==1)
+		{
+		
+	if(Iup==Bup)
+		{
+		if(ang>=-ang1&&ang1>0)	
+			ang=ang-0.1;
+			if(ang<-ang1&&ang1>0)
+				ang=ang+0.1;
+		}
+	else
+		{
+			if(ang<=ang1&&ang1>0)
+				ang=ang+0.1;
+			if(ang>ang1&&ang1>0)
+				ang-=0.1;
+		}	
+		}
+	else
+		{
+			ang=0;
+		}
+	///////////////////////////////////////////////////////////قسم الرسم
+		push();
+
+	translate(windowWidth/1.8,100);
+	rotate(ang);
+	fill(139,134,130);
+	rect(-10,-10,20,L,15);
+	
+	push();
+	stroke(255);
+	for(i=0;i<30;i+=3)
+		{
+			point(0,i);
+		}
+	pop();
+	
+	push();
+	
+	if(Iup==1)
+		{
+		stroke(0);
+			strokeWeight(5*N);
+		line(0,L/4,0,L/2-10);	
+		line(0,L/4,5,L/4+5);	
+		line(0,L/4,-5,L/4+5);
+			stroke(255);
+			strokeWeight(1);
+			textSize(17);
+			fill(0);
+text("i",20,L/4,25,25);
+			
+		}
+	else
+		{
+			push();
+			//translate(0,L/2-10);
+			rotate(PI);
+			translate(0,-L/2+10);
+		stroke(0);
+			strokeWeight(4*N);
+		line(0,L/4,0,L/2-10);	
+		line(0,L/4,5,L/4+5);	
+		line(0,L/4,-5,L/4+5);	
+			pop();
+			stroke(255);
+			strokeWeight(1);
+			textSize(17);
+			fill(0);
+text("i",20,30,25,25);
+		}
+	pop();
+	if(vect==1)
+		{
+		if(Iup==Bup)
+		{
+			push();
+			stroke('blue');
+			strokeWeight(4*N);
+			line(0,L/2-10,40,L/2-10);
+			line(40,L/2-10,35,L/2-5);
+			line(40,L/2-10,35,L/2-15);
+			stroke(255);
+			strokeWeight(1);
+			textSize(17);
+			fill('blue');
+text("Fl",50,L/2-10,25,25);
+			
+			pop();
+			
+			
+		}
+	else
+		{
+					push();
+			stroke('blue');
+			strokeWeight(4*N);
+			line(-40,L/2-10,0,L/2-10);
+			line(-40,L/2-10,-35,L/2-5);
+			line(-40,L/2-10,-35,L/2-15);
+			stroke(255);
+			strokeWeight(1);
+			textSize(17);
+			fill('blue');
+text("Fl",-60,L/2-10,25,25);
+			
+			pop();	
+		}
+	
+	
+		}
+	
+	
+	
+	
+	
+	stroke(0);
+strokeWeight(12);
+	point(0,0);
+  // stroke('red');
+//	point(0,L/2-10);
+	pop();
+	
+	push();
+	translate(windowWidth/1.8,100);
+	noFill();
+	stroke(0);
+	rect(-L,-20,L+L,L+40);
+	circle(-L+20,0,20);
+	
+	push();
+	stroke(0);
+	if(Bup==1)
+		{
+			push();
+			strokeWeight(5);
+			point(-L+20,0);
+			pop();
+		}
+	else{
+		
+		push();
+		stroke(0);
+		//strokeWeight(5);
+		translate(-L+20,0)
+		rotate(PI/4);
+		line(0,-10,0,10);
+		line(-10,0,10,0);
+		pop();
+		
+	}
+	
+	
+	
+	text("B",-L+40,-5,80,80);
+	pop();
+	
+	if(vect==1)
+		{
+		
+	 push();
+	stroke('brown');
+	strokeWeight(3*N);
+	line((L/2-10)*sin(-ang),(L/2-10)*cos(ang),(L/2-10)*sin(-ang),(L/2-10)*cos(ang)+L/4);
+	line((L/2-10)*sin(-ang),(L/2-10)*cos(ang)+L/4,(L/2-10)*sin(-ang)-5,(L/2-10)*cos(ang)+L/4-5);
+	line((L/2-10)*sin(-ang),(L/2-10)*cos(ang)+L/4,(L/2-10)*sin(-ang)+5,(L/2-10)*cos(ang)+L/4-5);
+	strokeWeight(1);
+	fill('brown');
+	text("W",(L/2-10)*sin(-ang)+20,(L/2-10)*cos(ang)+L/4,25,25)
+	pop();	
+			
+		}
+	push();
+	strokeWeight(8);
+	
+	
+	
+	stroke('red');
+	point((L/2-10)*sin(-ang),(L/2-10)*cos(ang))
+	pop();
+	
+	for(i=0;i<2*PI;i+=10*PI/180)
+		{
+			push();
+			stroke(0);
+			strokeWeight(0.5);
+			rotate(i);
+			line(0,30,0,40);
+			
+			pop();
+			
+			
+		}
+	push();
+	stroke(0);
+	strokeWeight(1);
+	for(i=0;i<30;i+=5)
+		{
+		
+		point(0,i);	
+			
+			
+		}
+	pop();
+	pop();
+	
+	
+	//////////*************************************************************معطيات الدخل
+	push();
+	fill('red');
+	textSize(15);
+	stroke(255);
+	strokeWeight(5);
+	text("B =",5,45,55,25);
+	text("i =",5,75,55,25);
+	text("L =",5,105,55,25);
+	text("M =",5,135,55,25);
+	
+	pop();
+	push();
+	//textSize(15*N);
+	fill('red');
+	textSize(15);
+	stroke(255);
+	strokeWeight(5);
+	text("cm",80,105,55,25);
+	text("T",80,45,55,25);
+	text("A",80,75,55,25);
+	text("Kg",80,135,55,25);
+	pop();
+	//**********************/****/********************************************************output
+	
+	textSize(15*N);
+	fill(0);
+	//text("time"+t,5,500,25,25);
+	rect(0,170,120*N,100)
+	
+	fill(255);
+	if(rad==1)
+		{
+		text("Rad",5,175,25,25);
+			text("ang="+round(ang1,5),10,200,25,25);
+			
+		}
+	else
+		{text("Deg",5,175,25,25);
+			text("ang="+round(ang1*180/PI,5),10,200,25,25);
+		}
+	
+	
+	
+	
+}
+////////////////////////////////////////////////////////////////////////////////botun
+
+function pstart()
+{start=1;
+	/*pause=0;
+	
+	t=0;
+	ressum=0;
+	stop=millis();
+ */
+	
+}
+
+function pstop()
+{
+	
+start=0;
+/*pause=0;
+ t=0;
+ressum=0;*/
+
+}
+/*
+function pressum()
+{
+	
+	pause=0;
+	ressum=1000*t;
+	stop=millis();
+	
+}
+function ppause()
+{
+	pause=1;
+ressum=t;
+	t=ressum;
+
+}
+*/
+function fIup()
+{
+	Iup++;
+	Iup=Iup%2;
+}
+function fBup()
+{
+	
+	Bup++;
+	Bup=Bup%2;
+}
+function vec()
+{
+	vect=1;
+}
+function unvec()
+{
+	vect=0;
+}
+//**********************************************************************
+function inputB()
+{
+	B=1.0*abs(this.value());
+}
+
+function inputi()
+{
+	ii=1.0*abs(this.value());
+}
+function inputL()
+{
+	L=L1;
+	L1=10.0*abs(this.value());
+	if(L1<100)
+		{
+			L1=L;
+		}
+}
+
+function inputM()
+{
+	m1=M;
+	M=1.0*abs(this.value());
+	if(M==0)
+		{
+			M=m1;
+		}
+	
+}
+function fang()
+{
+	rad++;
+	rad=rad%2;
+}
+  </script>
+</body>
+
+</html>
