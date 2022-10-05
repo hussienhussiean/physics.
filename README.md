@@ -1,2 +1,2 @@
-# physics.
+# physicss
 group of physics experiments
